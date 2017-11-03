@@ -18,7 +18,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::all();
+
+        return response()->json([
+            'products' => $products
+        ], 200);
     }
 
     /**
@@ -39,7 +43,20 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'price' => 'required|numeric'
+        ]);
+
+        $input = $request->all();
+
+        $product = Product::create($input);
+
+        return response()->json([
+            'product' => $product,
+            'message' => 'Success'
+        ], 200);
     }
 
     /**
