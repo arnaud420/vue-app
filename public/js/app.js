@@ -42957,6 +42957,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this2.errors.push(error.response.data.errors.price[0]);
                 }
             });
+        },
+        deleteProduct: function deleteProduct(index) {
+            var _this3 = this;
+
+            var conf = confirm("Voulez-vous vraiment supprimer ce produit ?");
+            if (conf === true) {
+                axios.delete('/products/' + this.products[index].id).then(function (response) {
+                    _this3.products.splice(index, 1);
+                }).catch(function (error) {
+                    alert(error);
+                });
+            }
         }
     }
 });
@@ -43035,7 +43047,26 @@ var render = function() {
                               )
                             ]),
                             _vm._v(" "),
-                            _vm._m(1, true)
+                            _c("td", { staticClass: "action-btns" }, [
+                              _c(
+                                "button",
+                                { staticClass: "btn btn-success btn-sm" },
+                                [_vm._v("Editer")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger btn-sm",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.deleteProduct(index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Supprimer")]
+                              )
+                            ])
                           ])
                         })
                       ],
@@ -43061,7 +43092,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _vm.errors.length > 0
@@ -43242,16 +43273,6 @@ var staticRenderFns = [
           "\n                                Action\n                            "
         )
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "action-btns" }, [
-      _c("button", { staticClass: "btn btn-success btn-sm" }, [_vm._v("Edit")]),
-      _vm._v(" "),
-      _c("button", { staticClass: "btn btn-danger btn-sm" }, [_vm._v("Delete")])
     ])
   },
   function() {
