@@ -43,8 +43,8 @@
                                     {{ product.price }} €
                                 </td>
                                 <td class="action-btns">
-                                    <button class="btn btn-success btn-sm">Edit</button>
-                                    <button class="btn btn-danger btn-sm">Delete</button>
+                                    <button class="btn btn-success btn-sm">Editer</button>
+                                    <button class="btn btn-danger btn-sm" @click="deleteProduct(index)">Supprimer</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -159,6 +159,19 @@
                             this.errors.push(error.response.data.errors.price[0]);
                         }
                     })
+            },
+
+            deleteProduct(index) {
+                let conf = confirm("Voulez-vous vraiment supprimer ce produit ?");
+                if (conf === true) {
+                    axios.delete('/products/' + this.products[index].id)
+                        .then(response => {
+                            this.products.splice(index, 1);
+                        })
+                        .catch(error => {
+                            alert(error);
+                    })
+                }
             }
         }
     }
