@@ -13,26 +13,29 @@
                     <div class="panel-body">
 
                         <table class="table table-bordered table-striped table-responsive" v-if="products.length > 0">
+                            <thead>
+                                <tr>
+                                    <th class="c-pointer" :class="{ 'is-active': filter == 'id' }" @click="filter = 'id'">
+                                        No.
+                                    </th>
+                                    <th class="c-pointer" :class="{ 'is-active': filter == 'name' }" @click="filter = 'name'">
+                                        Nom
+                                    </th>
+                                    <th class="c-pointer">
+                                        Description
+                                    </th>
+                                    <th class="c-pointer" :class="{ 'is-active': filter == 'price' }" @click="filter = 'price'">
+                                        Prix
+                                    </th>
+                                    <th>
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+
                             <tbody>
-                            <tr>
-                                <th>
-                                    No.
-                                </th>
-                                <th>
-                                    Nom
-                                </th>
-                                <th>
-                                    Description
-                                </th>
-                                <th>
-                                    Prix
-                                </th>
-                                <th>
-                                    Action
-                                </th>
-                            </tr>
-                            <tr v-for="(product, index) in products">
-                                <td>{{ index + 1 }}</td>
+                            <tr v-for="(product, index) in productsSort">
+                                <td>{{ product.id }}</td>
                                 <td>
                                     {{ product.name }}
                                 </td>
@@ -117,7 +120,8 @@
                     name: "",
                     description: "",
                     price: ""
-                }
+                },
+                filter:"id",
             }
         },
 
@@ -173,6 +177,34 @@
                     })
                 }
             }
+        },
+
+        computed: {
+            productsSort() {
+                if (this.filter === "id") {
+                    this.products.sort((a, b) => {
+                        return a.id - b.id;
+                    })
+                }
+                if (this.filter === 'name') {
+                    this.products.sort((a, b) => {
+                        let nameA = a.name.toUpperCase();
+                        let nameB = b.name.toUpperCase();
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
+                    });
+                }
+                if (this.filter === 'price') {
+                    this.products.sort((a, b) => {
+                        return a.price - b.price;
+                    })
+                }
+                return this.products;
+            }
         }
     }
 </script>
@@ -184,5 +216,12 @@
     }
     .panel-heading {
         padding: 20px;
+    }
+    .c-pointer {
+        cursor: pointer;
+    }
+    .is-active {
+        background: black;
+        color: white;
     }
 </style>
