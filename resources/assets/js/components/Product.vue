@@ -46,7 +46,7 @@
                                     {{ product.price }} €
                                 </td>
                                 <td class="action-btns">
-                                    <button class="btn btn-success btn-sm">Editer</button>
+                                    <button class="btn btn-success btn-sm" @click="initUpdateProduct(index)">Editer</button>
                                     <button class="btn btn-danger btn-sm" @click="deleteProduct(index)">Supprimer</button>
                                 </td>
                             </tr>
@@ -99,6 +99,47 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        <!-- modal update produit -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="update_product_model">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Editer un produit</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="alert alert-danger" v-if="errors.length > 0">
+                            <ul>
+                                <li v-for="error in errors">{{ error }}</li>
+                            </ul>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Nom :</label>
+                            <input type="text" name="name" placeholder="Nom du produit" class="form-control"
+                                   v-model="update_product.name">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description :</label>
+                            <textarea name="description" cols="30" rows="5" class="form-control"
+                                      placeholder="Description du produit" v-model="update_product.description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Prix :</label>
+                            <input type="number" name="price" placeholder="Prix du produit" class="form-control"
+                                   v-model="update_product.price">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button"class="btn btn-primary" @click="updateProduct()">Submit</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
     </div>
 </template>
 
@@ -122,6 +163,11 @@
                     price: ""
                 },
                 filter:"id",
+                update_product: {
+                    name: "",
+                    description: "",
+                    price: ""
+                }
             }
         },
 
@@ -135,6 +181,7 @@
             initAddProduct() {
                 this.errors = [];
                 $("#add_product_model").modal("show");
+                this.resetModel();
             },
 
             createProduct() {
@@ -147,6 +194,38 @@
                         this.resetModel();
                         this.products.push(response.data.product);
                         $("#add_product_model").modal("hide");
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        this.errors = [];
+                        if (error.response.data.errors.name) {
+                            this.errors.push(error.response.data.errors.name[0]);
+                        }
+
+                        if (error.response.data.errors.description) {
+                            this.errors.push(error.response.data.errors.description[0]);
+                        }
+
+                        if (error.response.data.errors.price) {
+                            this.errors.push(error.response.data.errors.price[0]);
+                        }
+                    })
+            },
+
+            initUpdateProduct(index) {
+                this.errors = [];
+              $("#update_product_model").modal("show");
+              this.update_product = this.products[index];
+            },
+
+            updateProduct() {
+                axios.patch('/products/' + this.update_product.id, {
+                    name: this.update_product.name,
+                    description: this.update_product.description,
+                    price: this.update_product.price
+                })
+                    .then(response => {
+                        $("#update_product_model").modal("hide");
                         console.log(response);
                     })
                     .catch(error => {

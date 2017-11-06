@@ -88,9 +88,31 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'price' => 'required|numeric'
+        ]);
+
+        $product = Product::findOrFail($id);
+        /*$input = $request->all();
+        $product_save = $product->save($input);*/
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+
+        $product->save();
+
+        if ($product) {
+            return response()->json([
+                'Product update with success !'
+            ], 200);
+        }
+        else {
+            return abort(500);
+        }
     }
 
     /**
