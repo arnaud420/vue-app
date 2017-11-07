@@ -292,6 +292,21 @@
                         return a.price - b.price;
                     })
                 }
+
+                let products = this.products,
+                    searchString = this.search;
+
+                if (searchString.length > 0) {
+
+                    searchString = searchString.trim().toLowerCase();
+
+                    products = products.filter((product) => {
+                        if(product.name.toLowerCase().indexOf(searchString) > -1){
+                            return product;
+                        }
+                    });
+                    return products;
+                }
                 return this.products;
             }
         }
