@@ -1,6 +1,12 @@
 <template>
     <div class="container">
         <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <!--<search-bar v-on:onSearch="launchRequest()"></search-bar>-->
+                <search-bar v-model="search"></search-bar>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -21,7 +27,7 @@
                                     <th class="c-pointer" :class="{ 'is-active': filter == 'name' }" @click="filter = 'name'">
                                         Nom
                                     </th>
-                                    <th class="c-pointer">
+                                    <th>
                                         Description
                                     </th>
                                     <th class="c-pointer" :class="{ 'is-active': filter == 'price' }" @click="filter = 'price'">
@@ -149,7 +155,6 @@
             axios.get('/products')
                 .then(response => {
                     this.products = response.data.products;
-                    console.log(response);
                 })
         },
 
@@ -167,7 +172,8 @@
                     name: "",
                     description: "",
                     price: ""
-                }
+                },
+                search:"",
             }
         },
 
@@ -255,7 +261,11 @@
                             alert(error);
                     })
                 }
-            }
+            },
+
+            launchRequest() {
+                alert("Recherche effectué !");
+            },
         },
 
         computed: {
@@ -302,5 +312,8 @@
     .is-active {
         background: black;
         color: white;
+    }
+    .padd-5 {
+        padding: 5rem;
     }
 </style>
